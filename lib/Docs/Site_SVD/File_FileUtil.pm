@@ -10,21 +10,21 @@ use warnings;
 use warnings::register;
 
 use vars qw($VERSION $DATE $FILE );
-$VERSION = '0.02';
-$DATE = '2003/06/19';
+$VERSION = '0.03';
+$DATE = '2003/06/21';
 $FILE = __FILE__;
 
 use vars qw(%INVENTORY);
 %INVENTORY = (
-    'lib/Docs/Site_SVD/File_FileUtil.pm' => [qw(0.02 2003/06/19), 'revised 0.01'],
-    'MANIFEST' => [qw(0.02 2003/06/19), 'generated, replaces 0.01'],
-    'Makefile.PL' => [qw(0.02 2003/06/19), 'generated, replaces 0.01'],
-    'README' => [qw(0.02 2003/06/19), 'generated, replaces 0.01'],
-    'lib/File/FileUtil.pm' => [qw(1.08 2003/06/19), 'revised 1.07'],
-    't/File/FileUtil/actual.txt' => [qw(0.02 2003/06/19), 'new'],
+    'lib/Docs/Site_SVD/File_FileUtil.pm' => [qw(0.03 2003/06/21), 'revised 0.02'],
+    'MANIFEST' => [qw(0.03 2003/06/21), 'generated, replaces 0.02'],
+    'Makefile.PL' => [qw(0.03 2003/06/21), 'generated, replaces 0.02'],
+    'README' => [qw(0.03 2003/06/21), 'generated, replaces 0.02'],
+    'lib/File/FileUtil.pm' => [qw(1.09 2003/06/21), 'revised 1.08'],
+    't/File/FileUtil/actual.txt' => [qw(0.02 2003/06/19), 'unchanged'],
     't/File/FileUtil/BadLoad.pm' => [qw(0.01 2003/06/18), 'unchanged'],
     't/File/FileUtil/BadVocab.pm' => [qw(0.01 2003/06/18), 'unchanged'],
-    't/File/FileUtil/FileUtil.t' => [qw(0.05 2003/06/19), 'revised 0.04'],
+    't/File/FileUtil/FileUtil.t' => [qw(0.06 2003/06/21), 'revised 0.05'],
     't/File/FileUtil/Drivers/Driver.pm' => [qw(0.02 2003/06/18), 'unchanged'],
     't/File/FileUtil/Drivers/Generate.pm' => [qw(0.02 2003/06/18), 'unchanged'],
     't/File/FileUtil/Drivers/IO.pm' => [qw(0.02 2003/06/18), 'unchanged'],
@@ -54,11 +54,11 @@ use vars qw(%INVENTORY);
 
   File::FileUtil - Generic file utilites developed originally for Test::STDmaker and ExtUtils::SVDmaker
 
- Revision: A
+ Revision: B
 
- Version: 0.02
+ Version: 0.03
 
- Date: 2003/06/19
+ Date: 2003/06/21
 
  Prepared for: General Public 
 
@@ -98,6 +98,11 @@ Plain Old Documentation (POD) that may be embedded in the language
 =back
 
 These features are established by the referenced documents.
+
+The system is the Perl programming language software.
+As established by the Perl referenced documents,
+program modules, such the 
+"L<File::FileUtil|File::FileUtil>" module, extend the Perl language.
 
 This release adds low level utilites used initially in support of
 the functional 
@@ -162,7 +167,7 @@ and Test::TestUtil has disappeared.
 
 =head2 1.3 Document overview.
 
-This document releases File::FileUtil version 0.02
+This document releases File::FileUtil version 0.03
 providing a description of the inventory, installation
 instructions and other information necessary to
 utilize and track this release.
@@ -180,8 +185,8 @@ system file specification.
 This document releases the file found
 at the following repository:
 
-   http://www.softwarediamonds/packages/File-FileUtil-0.02
-   http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/File-FileUtil-0.02
+   http://www.softwarediamonds/packages/File-FileUtil-0.03
+   http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/File-FileUtil-0.03
 
 
 =head2 3.1.2 Copyright.
@@ -242,15 +247,15 @@ consists of the following files:
 
  file                                                         version date       comment
  ------------------------------------------------------------ ------- ---------- ------------------------
- lib/Docs/Site_SVD/File_FileUtil.pm                           0.02    2003/06/19 revised 0.01
- MANIFEST                                                     0.02    2003/06/19 generated, replaces 0.01
- Makefile.PL                                                  0.02    2003/06/19 generated, replaces 0.01
- README                                                       0.02    2003/06/19 generated, replaces 0.01
- lib/File/FileUtil.pm                                         1.08    2003/06/19 revised 1.07
- t/File/FileUtil/actual.txt                                   0.02    2003/06/19 new
+ lib/Docs/Site_SVD/File_FileUtil.pm                           0.03    2003/06/21 revised 0.02
+ MANIFEST                                                     0.03    2003/06/21 generated, replaces 0.02
+ Makefile.PL                                                  0.03    2003/06/21 generated, replaces 0.02
+ README                                                       0.03    2003/06/21 generated, replaces 0.02
+ lib/File/FileUtil.pm                                         1.09    2003/06/21 revised 1.08
+ t/File/FileUtil/actual.txt                                   0.02    2003/06/19 unchanged
  t/File/FileUtil/BadLoad.pm                                   0.01    2003/06/18 unchanged
  t/File/FileUtil/BadVocab.pm                                  0.01    2003/06/18 unchanged
- t/File/FileUtil/FileUtil.t                                   0.05    2003/06/19 revised 0.04
+ t/File/FileUtil/FileUtil.t                                   0.06    2003/06/21 revised 0.05
  t/File/FileUtil/Drivers/Driver.pm                            0.02    2003/06/18 unchanged
  t/File/FileUtil/Drivers/Generate.pm                          0.02    2003/06/18 unchanged
  t/File/FileUtil/Drivers/IO.pm                                0.02    2003/06/18 unchanged
@@ -258,11 +263,209 @@ consists of the following files:
 
 =head2 3.3 Changes
 
-The changes to the previous revision are as follows:
+THe following changes were made:
+
+=over 4
+
+=item test_lib2inc
+
+Returns to parent directory of
+the first t directory going up
+from the test script instead of the
+t directory.
+
+=item find_t_roots
+
+Added the function find_t_roots that
+returns the parent directory of all
+the directories in @INC
+
+=back
+
+Changes to past revisions are as follows: 
+
+=over 4
+
+=item Test::TestUtil 0.01
+
+Originated
+
+=item Test::TestUtil 0.02
+
+Correct failure from Josts Smokehouse" <Jost.Krieger+smokeback@ruhr-uni-bochum.de>
+test run
+
+t/Test/TestUtil/TestUtil....Bareword "fspec_dirs" not allowed 
+while "strict subs" in use at 
+
+  /net/sunu991/disc1/.cpanplus/5.8.0/build/Test-TestUtil-0.01/blib/lib/Test/TestUtil.pm line 56.
+
+Changed line 56 from
+
+ my @dirs = (fspec_dirs) ? $from_package->splitdir( $fspec_dirs ) : ();
+
+to
+
+ my @dirs = ($fspec_dirs) ? $from_package->splitdir( $fspec_dirs ) : ();
+
+This error is troublesome since the test passed on my system using Active Perl
+under Microsoft NT. It should never have passed. 
+This error is in a core method, I<fspec2fspec>,
+that changes file specifications from one operating system
+to another operating system.
+This method has been in service unchanged for some time.
+
+=item Test::TestUtil 0.03
+
+Correct failure from Josts Smokehouse" <Jost.Krieger+smokeback@ruhr-uni-bochum.de>
+test run
+
+PERL_DL_NONLAZY=1 /usr/local/perl/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'blib/lib', 'blib/arch')" t/Test/TestUtil/TestUtil.t
+t/Test/TestUtil/TestUtil....# Test 18 got: '$VAR1 = '';
+' (t/Test/TestUtil/TestUtil.t at line 540 fail #17)
+#    Expected: '$VAR1 = '\\=head1 Title Page
+
+The I<pm2datah> method is not returning any data for Test 18. This will also cause
+the test of I<pm2data>, test 19 to fail.
+The I<pm2datah> is searching for the string "\n__DATA__\n".
+
+The "\n" character on Perl is a logical end of line character sequence.
+The "\n" end of line is different on Mr. Smokehouse's Unix operating system
+than on my Windows NT operating system.
+The test file was created under MSWin32 and uses a MSWin32 "\n".
+Under UNIX, I<pm2datah> method will look for the Unix "\n"
+and there will not be any.
+
+Changed "\n__DATA__\n" to /[\012\015]__DATA__/. 
+
+During the clean-up for CPAN, broke the I<format_hash_table>
+method for tables in hash of hash format. 
+Fixed the break, added test 29 to the I<t/Test/TestUtil/TestUtil.t>
+test script for this
+feature, and added a discusssion of this feature in
+POD discription for I<format_hash_table>
+
+=item Test::TestUtil 0.04
+
+item our old friend visits again - DOS and UNIX text file incompatibility
+
+This impacts other modules. We have to examine all modules for
+this portability defect and correct any found defects.
+
+Correct failure from Josts Smokehouse" <Jost.Krieger+smokeback@ruhr-uni-bochum.de>
+and Kingpin <mthurn@carbon> test runs.
+
+On Mr. Smokehouse's run email the got: VAR1 clearly showed extra white space
+line that is not present in the expected: VAR1. 
+In Mr. Kingpin's run the got: VAR1 and expected: VAR1 look visually the same.
+However, the Unix found a difference(s) and failed the test.
+
+For Mr. Smokehouse's run:
+
+PERL_DL_NONLAZY=1 /usr/local/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'blib/lib', 'blib/arch')" t/Test/TestUtil/TestUtil.t
+t/Test/TestUtil/TestUtil....NOK 18# Test 18 got: '$VAR1 = '\\=head1 Title Page
+
+
+ Software Version Description
+
+
+ for
+
+
+  File::FileUtil - Generic file utilites developed originally for Test::STDmaker and ExtUtils::SVDmaker
+
+
+ Revision: B
+
+[snip]
+
+
+(t/Test/TestUtil/TestUtil.t at line 565 fail #17)
+#    Expected: '$VAR1 = '\\=head1 Title Page
+
+
+ Software Version Description
+
+
+ for
+
+
+  File::FileUtil - Generic file utilites developed originally for Test::STDmaker and ExtUtils::SVDmaker
+
+What we have before, was a totally "failure to communicate." aka Cool Hand Luke. 
+VAR1 was empty. Now VAR1 has something. It is not completely dead.
+One probable cause is the Unix operating system must be producing two Unix \012 new lines 
+for a Microsoft single newline \015\012.
+Without being able to examine the test with a debugger, the only way to verify
+this is to provide the fix and see if the problem goes away when this great group
+of testers try for the fourth time. 
+
+Revised I<fin> method to take a handle, change I<pm2datah> method handle,  I<$fh>, 
+to binary by adding a I<binmode $fh> statement, and pass the actual
+thru the I<fin> method for test 18.
+
+Use I<fin($fh)> to read in the data for I<pm2data>, test 19 Unit Under Test (UUT),
+instead of using the raw file handle.
+
+The I<fin> method takes any \015\012 combination and changes it into the 
+logical Perl new line, I<"\n">, for the current operating system.
+
+=item File::FileUtil 0.01
 
 =over 4
 
 =item *
+
+At 02:44 AM 6/14/2003 +0200, Max Maischein wrote:
+A second thing that I would like you to reconsider is the naming of
+"Test::TestUtil" respectively "Test::Tech" - neither of those is descriptive
+of what the routines actually do or what the module implements. I would
+recommend renaming them to something closer to your other modules, maybe
+"Test::SVDMaker::Util" and "Test::SVDMaker::Tech", as some routines do not
+seem to be specific to the Test::-suite but rather general
+(format_array_table). Some parts (the "scrub" routines) might even better
+live in another module namespace, "Test::Util::ScrubData" or something like
+that.
+
+Broke away all the file related methods from Test::TestUtil and
+created this module File::FileUtil so the module name is
+more descriptive of the methods within the module.
+
+=item *
+
+Broke the smart nl code out of the fin method and made it
+is own separate method, smart_nl method. 
+
+At 02:44 AM 6/14/2003 +0200, Max Maischein wrote:
+Perl, as Perl already does smart newline handling, (even though with the
+advent of 5.8 even Unix-people have to learn the word "binmode" now :-)) 
+
+The only place where I see Perl does smart newline handling is
+the crlf IO displine introduce in Perl 5.6.  The File::FileUtil has
+a use 5.001 so that 5.6 Perl built-ins cannot be used. Added comment
+to smart_nl that for users with 5.6 Perl that it may be better to
+use the built-in crlf IO discipline.
+
+=item *
+
+For the load_package method that uses a eval "require $package" to load the
+package, the $@ does not capture all the warnings and error messages,
+at least not with ActiveState Perl.  Added code the captures also the
+warnings, by temporaily reassigning  $SIG(__WARN__), and added these
+to the $@ error messages.
+
+=item *
+
+Added two new tests to verify the NOGO paths for the for the load_package
+method.  One tests for load module failure looking for all the possilbe
+information on why the module did not load. The other verifies that
+the vocabulary is present after the loading the module.
+This information is very helpful when you must remote debug a load
+failure from CPAN testing whose is running on a different platform.
+
+=back
+
+=item File::FileUtil 0.02
 
 Added the method I<hex_dump>.
 
@@ -301,8 +504,8 @@ Follow the instructions for the the chosen installation software.
 
 The distribution file is at the following respositories:
 
-   http://www.softwarediamonds/packages/File-FileUtil-0.02
-   http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/File-FileUtil-0.02
+   http://www.softwarediamonds/packages/File-FileUtil-0.03
+   http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/File-FileUtil-0.03
 
 
 =head2 3.6.1 Installation support.
@@ -559,13 +762,13 @@ US DOD 2167A automation are as follows:
 __DATA__
 
 DISTNAME: File-FileUtil^
-VERSION : 0.02^
+VERSION : 0.03^
 REPOSITORY_DIR: packages^
 FREEZE: 1^
 
 PREVIOUS_DISTNAME:  ^
-PREVIOUS_RELEASE: 0.01^
-REVISION: A^
+PREVIOUS_RELEASE: 0.02^
+REVISION: B^
 AUTHOR  : SoftwareDiamonds.com E<lt>support@SoftwareDiamonds.comE<gt>^
 ABSTRACT: Generic file utilities originally developed to support Test::STDmaker^
 TITLE   :  File::FileUtil - Generic file utilites developed originally for Test::STDmaker and ExtUtils::SVDmaker^
@@ -596,12 +799,210 @@ t/File/FileUtil/Drivers/*
 PREREQ_PM:  ^
 TESTS: t/File/FileUtil/FileUtil.t^
 EXE_FILES:  ^
-CHANGES: 
-The changes to the previous revision are as follows:
+CHANGES:
+THe following changes were made:
+
+\=over 4
+
+\=item test_lib2inc
+
+Returns to parent directory of
+the first t directory going up
+from the test script instead of the
+t directory.
+
+\=item find_t_roots
+
+Added the function find_t_roots that
+returns the parent directory of all
+the directories in @INC
+
+\=back
+
+Changes to past revisions are as follows: 
+
+\=over 4
+
+\=item Test::TestUtil 0.01
+
+Originated
+
+\=item Test::TestUtil 0.02
+
+Correct failure from Josts Smokehouse" <Jost.Krieger+smokeback@ruhr-uni-bochum.de>
+test run
+
+t/Test/TestUtil/TestUtil....Bareword "fspec_dirs" not allowed 
+while "strict subs" in use at 
+
+  /net/sunu991/disc1/.cpanplus/5.8.0/build/Test-TestUtil-0.01/blib/lib/Test/TestUtil.pm line 56.
+
+Changed line 56 from
+
+ my @dirs = (fspec_dirs) ? $from_package->splitdir( $fspec_dirs ) : ();
+
+to
+
+ my @dirs = ($fspec_dirs) ? $from_package->splitdir( $fspec_dirs ) : ();
+
+This error is troublesome since the test passed on my system using Active Perl
+under Microsoft NT. It should never have passed. 
+This error is in a core method, I<fspec2fspec>,
+that changes file specifications from one operating system
+to another operating system.
+This method has been in service unchanged for some time.
+
+\=item Test::TestUtil 0.03
+
+Correct failure from Josts Smokehouse" <Jost.Krieger+smokeback@ruhr-uni-bochum.de>
+test run
+
+PERL_DL_NONLAZY=1 /usr/local/perl/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'blib/lib', 'blib/arch')" t/Test/TestUtil/TestUtil.t
+t/Test/TestUtil/TestUtil....# Test 18 got: '$VAR1 = '';
+' (t/Test/TestUtil/TestUtil.t at line 540 fail #17)
+#    Expected: '$VAR1 = '\\=head1 Title Page
+
+The I<pm2datah> method is not returning any data for Test 18. This will also cause
+the test of I<pm2data>, test 19 to fail.
+The I<pm2datah> is searching for the string "\n__DATA__\n".
+
+The "\n" character on Perl is a logical end of line character sequence.
+The "\n" end of line is different on Mr. Smokehouse's Unix operating system
+than on my Windows NT operating system.
+The test file was created under MSWin32 and uses a MSWin32 "\n".
+Under UNIX, I<pm2datah> method will look for the Unix "\n"
+and there will not be any.
+
+Changed "\n__DATA__\n" to /[\012\015]__DATA__/. 
+
+During the clean-up for CPAN, broke the I<format_hash_table>
+method for tables in hash of hash format. 
+Fixed the break, added test 29 to the I<t/Test/TestUtil/TestUtil.t>
+test script for this
+feature, and added a discusssion of this feature in
+POD discription for I<format_hash_table>
+
+\=item Test::TestUtil 0.04
+
+item our old friend visits again - DOS and UNIX text file incompatibility
+
+This impacts other modules. We have to examine all modules for
+this portability defect and correct any found defects.
+
+Correct failure from Josts Smokehouse" <Jost.Krieger+smokeback@ruhr-uni-bochum.de>
+and Kingpin <mthurn@carbon> test runs.
+
+On Mr. Smokehouse's run email the got: VAR1 clearly showed extra white space
+line that is not present in the expected: VAR1. 
+In Mr. Kingpin's run the got: VAR1 and expected: VAR1 look visually the same.
+However, the Unix found a difference(s) and failed the test.
+
+For Mr. Smokehouse's run:
+
+PERL_DL_NONLAZY=1 /usr/local/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'blib/lib', 'blib/arch')" t/Test/TestUtil/TestUtil.t
+t/Test/TestUtil/TestUtil....NOK 18# Test 18 got: '$VAR1 = '\\=head1 Title Page
+
+
+ Software Version Description
+
+
+ for
+
+
+ ${TITLE}
+
+
+ Revision: ${REVISION}
+
+[snip]
+
+
+(t/Test/TestUtil/TestUtil.t at line 565 fail #17)
+#    Expected: '$VAR1 = '\\=head1 Title Page
+
+
+ Software Version Description
+
+
+ for
+
+
+ ${TITLE}
+
+What we have before, was a totally "failure to communicate." aka Cool Hand Luke. 
+VAR1 was empty. Now VAR1 has something. It is not completely dead.
+One probable cause is the Unix operating system must be producing two Unix \012 new lines 
+for a Microsoft single newline \015\012.
+Without being able to examine the test with a debugger, the only way to verify
+this is to provide the fix and see if the problem goes away when this great group
+of testers try for the fourth time. 
+
+Revised I<fin> method to take a handle, change I<pm2datah> method handle,  I<$fh>, 
+to binary by adding a I<binmode $fh> statement, and pass the actual
+thru the I<fin> method for test 18.
+
+Use I<fin($fh)> to read in the data for I<pm2data>, test 19 Unit Under Test (UUT),
+instead of using the raw file handle.
+
+The I<fin> method takes any \015\012 combination and changes it into the 
+logical Perl new line, I<"\n">, for the current operating system.
+
+\=item File::FileUtil 0.01
 
 \=over 4
 
 \=item *
+
+At 02:44 AM 6/14/2003 +0200, Max Maischein wrote:
+A second thing that I would like you to reconsider is the naming of
+"Test::TestUtil" respectively "Test::Tech" - neither of those is descriptive
+of what the routines actually do or what the module implements. I would
+recommend renaming them to something closer to your other modules, maybe
+"Test::SVDMaker::Util" and "Test::SVDMaker::Tech", as some routines do not
+seem to be specific to the Test::-suite but rather general
+(format_array_table). Some parts (the "scrub" routines) might even better
+live in another module namespace, "Test::Util::ScrubData" or something like
+that.
+
+Broke away all the file related methods from Test::TestUtil and
+created this module File::FileUtil so the module name is
+more descriptive of the methods within the module.
+
+\=item *
+
+Broke the smart nl code out of the fin method and made it
+is own separate method, smart_nl method. 
+
+At 02:44 AM 6/14/2003 +0200, Max Maischein wrote:
+Perl, as Perl already does smart newline handling, (even though with the
+advent of 5.8 even Unix-people have to learn the word "binmode" now :-)) 
+
+The only place where I see Perl does smart newline handling is
+the crlf IO displine introduce in Perl 5.6.  The File::FileUtil has
+a use 5.001 so that 5.6 Perl built-ins cannot be used. Added comment
+to smart_nl that for users with 5.6 Perl that it may be better to
+use the built-in crlf IO discipline.
+
+\=item *
+
+For the load_package method that uses a eval "require $package" to load the
+package, the $@ does not capture all the warnings and error messages,
+at least not with ActiveState Perl.  Added code the captures also the
+warnings, by temporaily reassigning  $SIG(__WARN__), and added these
+to the $@ error messages.
+
+\=item *
+
+Added two new tests to verify the NOGO paths for the for the load_package
+method.  One tests for load module failure looking for all the possilbe
+information on why the module did not load. The other verifies that
+the vocabulary is present after the loading the module.
+This information is very helpful when you must remote debug a load
+failure from CPAN testing whose is running on a different platform.
+
+\=back
+
+\=item File::FileUtil 0.02
 
 Added the method I<hex_dump>.
 
@@ -617,6 +1018,11 @@ utilize and track this release.
 ^
 
 CAPABILITIES:
+The system is the Perl programming language software.
+As established by the Perl referenced documents,
+program modules, such the 
+"L<File::FileUtil|File::FileUtil>" module, extend the Perl language.
+
 This release adds low level utilites used initially in support of
 the functional 
 L<Test::STDmaker|Test::STDmaker> and

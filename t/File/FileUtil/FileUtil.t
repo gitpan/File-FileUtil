@@ -7,14 +7,13 @@ use warnings;
 use warnings::register;
 
 use vars qw($VERSION $DATE);
-$VERSION = '0.05';
-$DATE = '2003/06/19';
+$VERSION = '0.06';
+$DATE = '2003/06/21';
 
 use Cwd;
 use File::Spec;
 use File::FileUtil;
 use Test;
-use Data::Dumper;
 
 ######
 #
@@ -29,7 +28,7 @@ BEGIN {
    # Create the test plan by supplying the number of tests
    # and the todo tests
    #
-   $__tests__ = 24;
+   $__tests__ = 25;
    plan(tests => $__tests__);
 
    ########
@@ -250,13 +249,14 @@ my @dirs = File::Spec->splitdir( $dirs );
 pop @dirs; pop @dirs;
 shift @dirs unless $dirs[0];
 my @expected_lib = ();
-$dirs[-1] = 't';
-unshift @expected_lib, File::Spec->catdir($vol, @dirs);
+my @t_root = @dirs;
+pop @t_root;
+unshift @expected_lib, File::Spec->catdir($vol, @t_root);
 $dirs[-1] = 'lib';
 unshift @expected_lib, File::Spec->catdir($vol, @dirs);
 
-ok( join '; ', ($INC[0],$INC[1]), 
-    join '; ', @expected_lib);
+ok( join('; ', ($INC[0],$INC[1])), 
+    join('; ', @expected_lib));
 
 @INC = @restore_inc;
 
@@ -433,6 +433,23 @@ EOF
 $text_actual  = $fu->hex_dump( $text_actual  );
 $fu->fout( 'actual.txt', $text_actual);
 ok($text_actual, $text_expected);
+
+
+####
+#
+# ok: 25
+#
+# R:
+#
+print "# find_t_roots\n";
+my $dir = File::Spec->catdir(cwd(),'lib');
+$dir =~ s=/=\\=g if $^O eq 'MSWin32';
+unshift @INC,$dir;
+@t_path = $fu->find_t_roots( );
+$dir = cwd();
+$dir =~ s=/=\\=g if $^O eq 'MSWin32';
+ok( $t_path[0], $dir);
+shift @INC;
 
 
 ####

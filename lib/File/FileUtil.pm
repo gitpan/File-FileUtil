@@ -16,8 +16,8 @@ use warnings;
 use warnings::register;
 
 use vars qw($VERSION $DATE);
-$VERSION = '1.08';
-$DATE = '2003/06/19';
+$VERSION = '1.09';
+$DATE = '2003/06/21';
 
 use SelfLoader;
 use File::Spec;
@@ -93,6 +93,62 @@ sub fspec2fspec
 }
 
 __DATA__
+
+
+#####
+#
+#
+sub test_lib2inc
+{
+   #######
+   # Add the library of the unit under test (UUT) to @INC
+   #
+   use Cwd;
+   my $work_dir = cwd();
+   my ($vol,$dirs) = File::Spec->splitpath( $work_dir, 'nofile');
+   my @dirs = File::Spec->splitdir( $dirs );
+   while( $dirs[-1] ne 't' ) { 
+       chdir File::Spec->updir();
+       pop @dirs;
+   };
+   my @inc = @INC;
+   chdir File::Spec->updir();
+   my $lib_dir = cwd();
+   $lib_dir =~ s|/|\\|g if $^O eq 'MSWin32';  # microsoft abberation
+   unshift @INC, $lib_dir;  # include the current test directory
+   $lib_dir = File::Spec->catdir( cwd(), 'lib' );
+   $lib_dir =~ s|/|\\|g if $^O eq 'MSWin32';  # microsoft abberation
+   unshift @INC, $lib_dir;
+   chdir $work_dir if $work_dir;
+   @inc;
+ 
+}
+
+
+####
+# Find test roots
+#
+sub find_t_roots
+{
+   #######
+   # Add t directories to the search path
+   #
+   my ($t_dir,@dirs,$vol);
+   my %t_root=();
+   my @t_root = ();
+   foreach my $dir (@INC) {
+       ($vol,$t_dir) = File::Spec->splitpath( $dir, 'nofile' );
+       @dirs = File::Spec->splitdir($t_dir);
+       pop @dirs;
+       $t_dir = File::Spec->catdir( @dirs);
+       $t_dir = File::Spec->catpath( $vol, $t_dir, '');
+       next unless $t_dir;
+       next if $t_root{$t_dir}; # eliminate dups
+       $t_root{$t_dir} = 1;
+       push @t_root, $t_dir;
+   }
+   @t_root
+}
 
 
 ######
@@ -365,33 +421,6 @@ sub pm2require
 }
 
 
-#####
-#
-#
-sub test_lib2inc
-{
-   #######
-   # Add the library of the unit under test (UUT) to @INC
-   #
-   use Cwd;
-   my $work_dir = cwd();
-   my ($vol,$dirs) = File::Spec->splitpath( $work_dir, 'nofile');
-   my @dirs = File::Spec->splitdir( $dirs );
-   while( $dirs[-1] ne 't' ) { 
-       chdir File::Spec->updir();
-       pop @dirs;
-   };
-   my @inc = @INC;
-   my $lib_dir = cwd();
-   $lib_dir =~ s|/|\\|g if $^O eq 'MSWin32';  # microsoft abberation
-   unshift @INC, $lib_dir;  # include the current test directory
-   chdir File::Spec->updir();
-   $lib_dir = File::Spec->catdir( cwd(), 'lib' );
-   unshift @INC, $lib_dir;
-   chdir $work_dir if $work_dir;
-   @inc;
- 
-}
 
 ######
 #
@@ -500,7 +529,6 @@ sub find_t_paths
 
 
 
-
 #######
 #
 # Glob a file specification
@@ -575,59 +603,6 @@ sub is_module
 }
 
 
-
-########
-# Create a version file name based on a current file name.
-#
-sub version
-{
-   my ($self, $file, $base_new, $ext_new, $seq, $places) = @_;
-
-   my ($base, $vol, $dir, $ext);
-   if( $file ) {
-       #####
-       # Parse the file into an path, base name and extension 
-       #
-       ($base, $vol, $dir, $ext) = File::Parse->fileparse($file, '\..*' );
-   }
-   else {
-       $file = 'temp.dat';
-       $base = 'temp';
-       $ext = '.dat';
-       $dir='';
-   }
-  
-   $ext = $ext_new if $ext_new;
-   $base = $base_new if $base_new;
-   $seq = 1 unless $seq;
-   $places = 3 unless $places;
- 
-   my $top_seq = 10 ** $places;
-   do {
-
-       if ($top_seq <= $seq) {
-           warn( "Sequence number $seq overflowed limit of $top_seq.\n");
-           return  undef;
-       }
-
-       ######
-       # Form a new base name with a sequence number
-       #
-       $file = sprintf( "$base%0$places" . "d$ext", $seq );
-       $file = File::Spec->catpath($vol,$dir,$file);
-       $seq += 1;
-
-   }  while ( -e $file );
-
-   unless( $file ) {
-       warn("Empty sequence file name.\n");
-       return undef;
-   }
-   return ($file, $seq);
-
-}
-
-
 #####
 #
 #
@@ -668,6 +643,7 @@ File::FileUtil - various low-level subroutines that involve files
   $data          = smart_nl($data)
   $data          = File::FileUtil->fin( $file_name )
   $success       = File::FileUtil->fout($file_name, $data)
+  $result        = File::FileUtil->hex_dump( $string );
 
   $package       = File::FileUtil->is_package_loaded($package)
   $error         = File::FileUtil->load_package($package)
@@ -679,22 +655,18 @@ File::FileUtil - various low-level subroutines that involve files
   $pm_file       = File::FileUtil->fspec2pm( $fspec, $file )
   $file          = File::FileUtil->pm2file($pm_file)
   $file          = File::FileUtil->pm2require($pm_file)
+  @globed_files  = File::FileUtil->fspec_glob($fspec, @files)
 
   ($file, $path) = File::FileUtil->find_in_path($fspec, $file, [\@path])
   @INC           = File::FileUtil->test_lib2inc()
   @t_path        = File::FileUtil->find_t_paths()
+  @t_path        = File::FileUtil->find_t_roots()
 
   $fh            = File::FileUtil->pm2datah($pm_file)
   $data          = File::FileUtil->pm2data($pm_file)
 
   @sub_modules   = File::FileUtil->sub_modules($base_file, @dirs)
   $module        = File::FileUtil->is_module($module, @modules)
-
-  @globed_files  = File::FileUtil->fspec_glob($fspec, @files)
-
-  $result        = File::FileUtil->hex_dump( $string );
-
-
 
 =head1 DESCRIPTION
 
@@ -839,6 +811,31 @@ For example,
  myperl/t
  perl/site/t
  perl/t 
+
+=head2 find_t_roots method
+
+This method operates on the assumption that the test files are a subtree to
+a directory named I<t> and the I<t> directories are on the same level as
+the last directory of each directory tree specified in I<@INC>.
+If this assumption is not true, this method most likely will not behave
+very well.
+
+The I<find_t_roots> method returns the directory trees in I<@INC> with
+last directory drooped.
+
+For example, 
+
+ ==> @INC
+
+ myperl/lib
+ perl/site/lib
+ perl/lib 
+
+ => File::FileUtil->find_t_roots()
+
+ myperl
+ perl/site
+ perl
 
 =head2 fspec_glob method
 
@@ -1202,6 +1199,42 @@ contains the files I<Driver.pm Generate.pm IO.pm>, then
  ==> join ',', sort File::FileUtil->sub_modules( __FILE__, 'Drivers' );
 
  'Driver, Generate, IO'
+
+=head2 test_lib2inc method
+
+ @INC           = File::FileUtil->test_lib2inc()
+
+The I<test_lib2inc> method walks up the directory tree from the current
+directory until it finds a directory named "t".
+It then pushs the parent to that directory, and a directory with "t" 
+replaced by "lib" onto @INC.
+The I<test_lib2inc> method returns the @INC before it is altered so
+that the using method may return @INC to before calling I<test_lib2inc>.
+
+For example,
+
+ ==> @INC
+
+ perl/site/lib
+ perl/lib 
+
+ ==> cwd()
+
+ myperl/t/mymodule/mytests
+
+ => @restore_inc = File::FileUtil->find_t_roots()
+
+ => @INC
+
+ myperl/lib
+ myperl
+ perl/site/lib
+ perl/lib
+
+ => @restore_inc
+
+ perl/site/lib
+ perl/lib
 
 
 =head1 NOTES
