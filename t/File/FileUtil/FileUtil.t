@@ -7,8 +7,8 @@ use warnings;
 use warnings::register;
 
 use vars qw($VERSION $DATE);
-$VERSION = '0.04';
-$DATE = '2003/06/18';
+$VERSION = '0.05';
+$DATE = '2003/06/19';
 
 use Cwd;
 use File::Spec;
@@ -29,7 +29,7 @@ BEGIN {
    # Create the test plan by supplying the number of tests
    # and the todo tests
    #
-   $__tests__ = 22;
+   $__tests__ = 24;
    plan(tests => $__tests__);
 
    ########
@@ -83,6 +83,11 @@ END {
     chdir $__restore_dir__;
 }
 
+#####
+# New $fu object
+#
+my $fu = 'File::FileUtil';
+
 #######
 #
 # ok: 1 
@@ -91,7 +96,7 @@ END {
 #
 my $loaded;
 print "# is_package_loaded\n";
-ok ($loaded = File::FileUtil->is_package_loaded('File::Basename'), ''); 
+ok ($loaded = $fu->is_package_loaded('File::Basename'), ''); 
 
 #######
 # 
@@ -100,7 +105,9 @@ ok ($loaded = File::FileUtil->is_package_loaded('File::Basename'), '');
 # R:
 # 
 print "# load_package\n";
-skip($loaded, File::FileUtil->load_package( 'File::Basename' ), '');
+my $errors = $fu->load_package( 'File::Basename' );
+skip($loaded, $errors, '');
+skip_rest( $errors, 2 );
 
 #######
 #
@@ -109,7 +116,7 @@ skip($loaded, File::FileUtil->load_package( 'File::Basename' ), '');
 # R:
 #
 print "# Pod_pod_errors\n";
-ok( File::FileUtil->pod_errors( 'File::Basename'), 0 );
+ok( $fu->pod_errors( 'File::Basename'), 0 );
 
 ####
 #
@@ -118,7 +125,7 @@ ok( File::FileUtil->pod_errors( 'File::Basename'), 0 );
 # R:
 #
 print "# fspec2fspec\n";
-ok( File::FileUtil->fspec2fspec( 'Unix', 'MSWin32', 'File/FileUtil.pm'), 
+ok( $fu->fspec2fspec( 'Unix', 'MSWin32', 'File/FileUtil.pm'), 
    'File\\FileUtil.pm');
 
 ####
@@ -128,7 +135,7 @@ ok( File::FileUtil->fspec2fspec( 'Unix', 'MSWin32', 'File/FileUtil.pm'),
 # R:
 #
 print "# fspec2os os2fspec 1\n";
-ok( File::FileUtil->os2fspec( 'Unix', (File::FileUtil->fspec2os( 'Unix', 'File/FileUtil.pm'))), 
+ok( $fu->os2fspec( 'Unix', ($fu->fspec2os( 'Unix', 'File/FileUtil.pm'))), 
    'File/FileUtil.pm' );
 
 ####
@@ -138,7 +145,7 @@ ok( File::FileUtil->os2fspec( 'Unix', (File::FileUtil->fspec2os( 'Unix', 'File/F
 # R:
 #
 print "# fspec2os os2fspec 2\n";
-ok( File::FileUtil->os2fspec( 'MSWin32', (File::FileUtil->fspec2os( 'MSWin32', 'Test\\TestUtil.pm'))), 
+ok( $fu->os2fspec( 'MSWin32', ($fu->fspec2os( 'MSWin32', 'Test\\TestUtil.pm'))), 
    'Test\\TestUtil.pm');
 
 ####
@@ -148,8 +155,8 @@ ok( File::FileUtil->os2fspec( 'MSWin32', (File::FileUtil->fspec2os( 'MSWin32', '
 # R:
 #
 print "# pm2require\n";
-ok( File::FileUtil->pm2require( 'File::FileUtil'), 
-    File::FileUtil->fspec2os( 'Unix', 'File/FileUtil.pm'));
+ok( $fu->pm2require( "$fu"), 
+    $fu->fspec2os( 'Unix', 'File/FileUtil.pm'));
 
 ####
 #
@@ -158,7 +165,7 @@ ok( File::FileUtil->pm2require( 'File::FileUtil'),
 # R:
 #
 print "# pm2file\n";
-my ($file) = File::FileUtil->pm2file( 'File::FileUtil');
+my ($file) = $fu->pm2file( "$fu" );
 my  $found = 0;
 foreach my $path (@INC) {
     if( $file =~ m=^\Q$path\E= ) {
@@ -175,7 +182,7 @@ ok ($found, 1);
 # R:
 #
 print "# sub_modules\n";
-my @drivers = sort File::FileUtil->sub_modules( __FILE__, 'Drivers' );
+my @drivers = sort $fu->sub_modules( __FILE__, 'Drivers' );
 ok( join (', ', @drivers), 'Driver, Generate, IO');
 
 ####
@@ -185,7 +192,7 @@ ok( join (', ', @drivers), 'Driver, Generate, IO');
 # R:
 #
 print "# is_module\n";
-ok( File::FileUtil->is_module('dri', @drivers ), 'Driver');
+ok( $fu->is_module('dri', @drivers ), 'Driver');
 
 ####
 #
@@ -194,7 +201,7 @@ ok( File::FileUtil->is_module('dri', @drivers ), 'Driver');
 # R:
 #
 print "# fspec2pm\n";
-ok( File::FileUtil->fspec2pm('Unix', 'File/FileUtil.pm'), 'File::FileUtil');
+ok( $fu->fspec2pm('Unix', 'File/FileUtil.pm'), "$fu");
 
 ####
 #
@@ -204,7 +211,7 @@ ok( File::FileUtil->fspec2pm('Unix', 'File/FileUtil.pm'), 'File::FileUtil');
 #
 print "# find_t_paths\n";
 unshift @INC,File::Spec->catdir(cwd(),'lib');
-my @t_path = File::FileUtil->find_t_paths( );
+my @t_path = $fu->find_t_paths( );
 ok( $t_path[0], File::Spec->catdir(cwd(),'t'));
 shift @INC;
 
@@ -215,7 +222,7 @@ shift @INC;
 # R:
 #
 print "# fspec_glob Unix 1\n";
-@drivers = sort File::FileUtil->fspec_glob('Unix','Drivers/G*.pm');
+@drivers = sort $fu->fspec_glob('Unix','Drivers/G*.pm');
 ok( join (', ', @drivers), 
     File::Spec->catfile('Drivers', 'Generate.pm'));
 
@@ -224,7 +231,7 @@ ok( join (', ', @drivers),
 # ok: 14
 #
 print "# fspec_glob Unix 2\n";
-@drivers = sort File::FileUtil->fspec_glob('MSWin32','Drivers\\I*.pm');
+@drivers = sort $fu->fspec_glob('MSWin32','Drivers\\I*.pm');
 ok( join (', ', @drivers), 
     File::Spec->catfile('Drivers', 'IO.pm'));
 
@@ -236,7 +243,7 @@ ok( join (', ', @drivers),
 # R:
 #
 print "# test_lib2inc\n";
-my @restore_inc = File::FileUtil->test_lib2inc( );
+my @restore_inc = $fu->test_lib2inc( );
 
 my ($vol,$dirs) = File::Spec->splitpath( cwd(), 'nofile');
 my @dirs = File::Spec->splitdir( $dirs );
@@ -261,8 +268,8 @@ ok( join '; ', ($INC[0],$INC[1]),
 # R:
 #
 print "# pm2datah\n";
-my $fh = File::FileUtil->pm2datah('File::FileUtil::Drivers::Driver');
-my $actual_datah = File::FileUtil->fin($fh);
+my $fh = $fu->pm2datah('File::FileUtil::Drivers::Driver');
+my $actual_datah = $fu->fin($fh);
 $actual_datah =~ s/^\s*(.*)\s*$/$1/gs;
 
 my $expected_datah = << 'EOF';
@@ -301,7 +308,7 @@ ok($actual_datah, $expected_datah);
 # R:
 #
 print "# pm2data\n";
-$actual_datah = File::FileUtil->pm2data('File::FileUtil::Drivers::Driver');
+$actual_datah = $fu->pm2data('File::FileUtil::Drivers::Driver');
 $actual_datah =~ s/^\s*(.*)\s*$/$1/gs;
 ok($actual_datah, $expected_datah);
 
@@ -314,8 +321,8 @@ ok($actual_datah, $expected_datah);
 print "# fin fout 1\n";
 unlink 'test.pm';
 my $fout_expected = "=head1 Title Page\n\nSoftware Version Description\n\nfor\n\n";
-File::FileUtil->fout( 'test.pm', $fout_expected, {binary => 1} );
-my $fout_actual = File::FileUtil->fin( 'test.pm' );
+$fu->fout( 'test.pm', $fout_expected, {binary => 1} );
+my $fout_actual = $fu->fin( 'test.pm' );
 ok($fout_actual,$fout_expected);
 unlink 'test.pm';
 
@@ -327,8 +334,8 @@ unlink 'test.pm';
 #
 print "# fin fout 2\n";
 my $fout_dos = "=head1 Title Page\r\n\r\nSoftware Version Description\r\n\r\nfor\r\n\r\n";
-File::FileUtil->fout( 'test.pm', $fout_dos, {binary => 1} );
-$fout_actual = File::FileUtil->fin('test.pm');
+$fu->fout( 'test.pm', $fout_dos, {binary => 1} );
+$fout_actual = $fu->fin('test.pm');
 ok($fout_actual, $fout_expected);
 unlink 'test.pm';
 
@@ -346,7 +353,7 @@ pop @dirs; pop @dirs;
 shift @dirs unless $dirs[0];
 my $expected_file = File::Spec->catfile($vol, @dirs, 'File', 'FileUtil', 'FileUtil.t');
 my $expected_dir = File::Spec->catdir($vol, @dirs);
-my @actual = File::FileUtil->find_in_path('Unix', 'File/FileUtil/FileUtil.t');
+my @actual = $fu->find_in_path('Unix', 'File/FileUtil/FileUtil.t');
 ok( ( @actual ) ? join '; ', @actual : '', "$expected_file; $expected_dir" );
 
 
@@ -357,7 +364,7 @@ ok( ( @actual ) ? join '; ', @actual : '', "$expected_file; $expected_dir" );
 # R:
 # 
 print "# load_package bad package\n";
-my $error = File::FileUtil->load_package( 'File::FileUtil::BadLoad' );
+my $error = $fu->load_package( 'File::FileUtil::BadLoad' );
 ok($error =~ /Cannot load File::FileUtil::BadLoad/);
 
 #######
@@ -367,24 +374,77 @@ ok($error =~ /Cannot load File::FileUtil::BadLoad/);
 # R:
 # 
 print "# load_package bad vocab\n";
-ok(File::FileUtil->load_package( 'File::FileUtil::BadVocab' ),
+ok($fu->load_package( 'File::FileUtil::BadVocab' ),
    "# File::FileUtil::BadVocab loaded but package vocabulary absent.\n");
 
+#######
+# 
+# ok:  23
+#
+# R:
+# 
+print "# smart_nl\n";
+my $text_actual =   "line1\015\012line2\012\015line3\012line4\015";
+my $text_expected = "line1\nline2\nline3\nline4\n";
+ok($fu->smart_nl($text_actual), $text_expected);
+
+
+#######
+# 
+# ok:  24
+#
+# R:
+# 
+print "# hex_dump\n";
+$text_actual = <<'EOF';
+1..8 todo 2 5;
+# OS            : MSWin32
+# Perl          : 5.6.1
+# Local Time    : Thu Jun 19 23:49:54 2003
+# GMT Time      : Fri Jun 20 03:49:54 2003 GMT
+# Number Storage: string
+# Test::Tech    : 1.06
+# Test          : 1.15
+# Data::Dumper  : 2.102
+# =cut 
+# Pass test
+ok 1
+EOF
+    
+$text_actual =~ s/\n/\012/g; # replace logcial \n with ASCII \012 LF
+
+$text_expected = <<'EOF';
+312e2e3820746f646f203220353b0a23204f5320
+20202020202020202020203a204d5357696e3332
+0a23205065726c202020202020202020203a2035
+2e362e310a23204c6f63616c2054696d65202020
+203a20546875204a756e2031392032333a34393a
+353420323030330a2320474d542054696d652020
+202020203a20467269204a756e2032302030333a
+34393a3534203230303320474d540a23204e756d
+6265722053746f726167653a20737472696e670a
+2320546573743a3a54656368202020203a20312e
+30360a232054657374202020202020202020203a
+20312e31350a2320446174613a3a44756d706572
+20203a20322e3130320a23203d637574200a2320
+5061737320746573740a6f6b20310a
+EOF
+
+$text_actual  = $fu->hex_dump( $text_actual  );
+$fu->fout( 'actual.txt', $text_actual);
+ok($text_actual, $text_expected);
 
 
 ####
 # 
 # Support:
 #
-# The ok user caller to look up the stack. If nothing there,
-# ok produces a warining. Thus, burying it in a subroutine eliminates
-# these warning.
 #
 
 sub skip_rest
 {
     my ($results, $test_num) = @_;
-    unless( $results ) {
+    if( $results ) {
         for (my $i=$test_num; $i < $__tests__; $i++) { skip(1,0,0) };
         exit 1;
     }
@@ -396,7 +456,7 @@ __END__
 
 =head1 NAME
 
-FileUtil.t - test script for File::FileUtil
+FileUtil.t - test script for $fu
 
 =head1 SYNOPSIS
 

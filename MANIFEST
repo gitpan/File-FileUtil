@@ -3,6 +3,7 @@ MANIFEST
 Makefile.PL
 README
 lib/File/FileUtil.pm
+t/File/FileUtil/actual.txt
 t/File/FileUtil/BadLoad.pm
 t/File/FileUtil/BadVocab.pm
 t/File/FileUtil/FileUtil.t

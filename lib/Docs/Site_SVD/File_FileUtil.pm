@@ -10,23 +10,24 @@ use warnings;
 use warnings::register;
 
 use vars qw($VERSION $DATE $FILE );
-$VERSION = '0.01';
-$DATE = '2003/06/18';
+$VERSION = '0.02';
+$DATE = '2003/06/19';
 $FILE = __FILE__;
 
 use vars qw(%INVENTORY);
 %INVENTORY = (
-    'lib/Docs/Site_SVD/File_FileUtil.pm' => [qw(0.01 2003/06/18), 'revised 0.04'],
-    'MANIFEST' => [qw(0.01 2003/06/18), 'generated, replaces 0.04'],
-    'Makefile.PL' => [qw(0.01 2003/06/18), 'generated, replaces 0.04'],
-    'README' => [qw(0.01 2003/06/18), 'generated, replaces 0.04'],
-    'lib/File/FileUtil.pm' => [qw(1.07 2003/06/18), 'revised 1.06'],
-    't/File/FileUtil/BadLoad.pm' => [qw(0.01 2003/06/18), 'new'],
-    't/File/FileUtil/BadVocab.pm' => [qw(0.01 2003/06/18), 'new'],
-    't/File/FileUtil/FileUtil.t' => [qw(0.04 2003/06/18), 'revised 0.03'],
-    't/File/FileUtil/Drivers/Driver.pm' => [qw(0.02 2003/06/18), 'revised 0.01'],
-    't/File/FileUtil/Drivers/Generate.pm' => [qw(0.02 2003/06/18), 'revised 0.01'],
-    't/File/FileUtil/Drivers/IO.pm' => [qw(0.02 2003/06/18), 'revised 0.01'],
+    'lib/Docs/Site_SVD/File_FileUtil.pm' => [qw(0.02 2003/06/19), 'revised 0.01'],
+    'MANIFEST' => [qw(0.02 2003/06/19), 'generated, replaces 0.01'],
+    'Makefile.PL' => [qw(0.02 2003/06/19), 'generated, replaces 0.01'],
+    'README' => [qw(0.02 2003/06/19), 'generated, replaces 0.01'],
+    'lib/File/FileUtil.pm' => [qw(1.08 2003/06/19), 'revised 1.07'],
+    't/File/FileUtil/actual.txt' => [qw(0.02 2003/06/19), 'new'],
+    't/File/FileUtil/BadLoad.pm' => [qw(0.01 2003/06/18), 'unchanged'],
+    't/File/FileUtil/BadVocab.pm' => [qw(0.01 2003/06/18), 'unchanged'],
+    't/File/FileUtil/FileUtil.t' => [qw(0.05 2003/06/19), 'revised 0.04'],
+    't/File/FileUtil/Drivers/Driver.pm' => [qw(0.02 2003/06/18), 'unchanged'],
+    't/File/FileUtil/Drivers/Generate.pm' => [qw(0.02 2003/06/18), 'unchanged'],
+    't/File/FileUtil/Drivers/IO.pm' => [qw(0.02 2003/06/18), 'unchanged'],
 
 );
 
@@ -53,11 +54,11 @@ use vars qw(%INVENTORY);
 
   File::FileUtil - Generic file utilites developed originally for Test::STDmaker and ExtUtils::SVDmaker
 
- Revision: -
+ Revision: A
 
- Version: 0.01
+ Version: 0.02
 
- Date: 2003/06/18
+ Date: 2003/06/19
 
  Prepared for: General Public 
 
@@ -110,13 +111,12 @@ Thus, in order to provide possible reuse in other modules,
 the L<File::FileUtils|File::FileUtils> module is broken
 out also as a functional module.
 
-The dependency of the functional program modules 
-L<Test::STDmaker|Test::STDmaker> and
-L<ExtUtils::SVDmaker|ExtUtils::SVDmaker>
-in the US DOD STD2167A bundle is as follows:
-
-     Test::Tech File::FileUtil Test::STD::TestUtil
-        DataPort::DataFile DataPort::FileType::FormDB
+The dependency of the program modules in the US DOD STD2167A bundle is as follows:
+ 
+ File::FileUtil 
+   Test::STD::Scrub
+     Test::Tech
+        DataPort::FileType::FormDB DataPort::DataFile Test::STD::STDutil
             Test::STDmaker ExtUtils::SVDmaker
 
 Test software should be short and not depend on any other
@@ -152,9 +152,17 @@ that the program module vocabulary is present.
 
 =back
 
+Note the 
+L<File::FileUtil|File::FileUtil>, 
+L<Test::STD::STDutil|Test::STD::STDutil> 
+L<Test::STD::Scrub|Test::STD::Scrub> 
+program modules breaks up 
+the Test::TestUtil program module
+and Test::TestUtil has disappeared.
+
 =head2 1.3 Document overview.
 
-This document releases File::FileUtil version 0.01
+This document releases File::FileUtil version 0.02
 providing a description of the inventory, installation
 instructions and other information necessary to
 utilize and track this release.
@@ -172,8 +180,8 @@ system file specification.
 This document releases the file found
 at the following repository:
 
-   http://www.softwarediamonds/packages/File-FileUtil-0.01
-   http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/File-FileUtil-0.01
+   http://www.softwarediamonds/packages/File-FileUtil-0.02
+   http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/File-FileUtil-0.02
 
 
 =head2 3.1.2 Copyright.
@@ -234,73 +242,29 @@ consists of the following files:
 
  file                                                         version date       comment
  ------------------------------------------------------------ ------- ---------- ------------------------
- lib/Docs/Site_SVD/File_FileUtil.pm                           0.01    2003/06/18 revised 0.04
- MANIFEST                                                     0.01    2003/06/18 generated, replaces 0.04
- Makefile.PL                                                  0.01    2003/06/18 generated, replaces 0.04
- README                                                       0.01    2003/06/18 generated, replaces 0.04
- lib/File/FileUtil.pm                                         1.07    2003/06/18 revised 1.06
- t/File/FileUtil/BadLoad.pm                                   0.01    2003/06/18 new
- t/File/FileUtil/BadVocab.pm                                  0.01    2003/06/18 new
- t/File/FileUtil/FileUtil.t                                   0.04    2003/06/18 revised 0.03
- t/File/FileUtil/Drivers/Driver.pm                            0.02    2003/06/18 revised 0.01
- t/File/FileUtil/Drivers/Generate.pm                          0.02    2003/06/18 revised 0.01
- t/File/FileUtil/Drivers/IO.pm                                0.02    2003/06/18 revised 0.01
+ lib/Docs/Site_SVD/File_FileUtil.pm                           0.02    2003/06/19 revised 0.01
+ MANIFEST                                                     0.02    2003/06/19 generated, replaces 0.01
+ Makefile.PL                                                  0.02    2003/06/19 generated, replaces 0.01
+ README                                                       0.02    2003/06/19 generated, replaces 0.01
+ lib/File/FileUtil.pm                                         1.08    2003/06/19 revised 1.07
+ t/File/FileUtil/actual.txt                                   0.02    2003/06/19 new
+ t/File/FileUtil/BadLoad.pm                                   0.01    2003/06/18 unchanged
+ t/File/FileUtil/BadVocab.pm                                  0.01    2003/06/18 unchanged
+ t/File/FileUtil/FileUtil.t                                   0.05    2003/06/19 revised 0.04
+ t/File/FileUtil/Drivers/Driver.pm                            0.02    2003/06/18 unchanged
+ t/File/FileUtil/Drivers/Generate.pm                          0.02    2003/06/18 unchanged
+ t/File/FileUtil/Drivers/IO.pm                                0.02    2003/06/18 unchanged
 
 
 =head2 3.3 Changes
 
-The changes from the previous version are as follows:
+The changes to the previous revision are as follows:
 
 =over 4
 
 =item *
 
-At 02:44 AM 6/14/2003 +0200, Max Maischein wrote:
-A second thing that I would like you to reconsider is the naming of
-"Test::TestUtil" respectively "Test::Tech" - neither of those is descriptive
-of what the routines actually do or what the module implements. I would
-recommend renaming them to something closer to your other modules, maybe
-"Test::SVDMaker::Util" and "Test::SVDMaker::Tech", as some routines do not
-seem to be specific to the Test::-suite but rather general
-(format_array_table). Some parts (the "scrub" routines) might even better
-live in another module namespace, "Test::Util::ScrubData" or something like
-that.
-
-Broke away all the file related methods from Test::TestUtil and
-created this module File::FileUtil so the module name is
-more descriptive of the methods within the module.
-
-=item *
-
-Broke the smart nl code out of the fin method and made it
-is own separate method, smart_nl method. 
-
-At 02:44 AM 6/14/2003 +0200, Max Maischein wrote:
-Perl, as Perl already does smart newline handling, (even though with the
-advent of 5.8 even Unix-people have to learn the word "binmode" now :-)) 
-
-The only place where I see Perl does smart newline handling is
-the crlf IO displine introduce in Perl 5.6.  The File::FileUtil has
-a use 5.001 so that 5.6 Perl built-ins cannot be used. Added comment
-to smart_nl that for users with 5.6 Perl that it may be better to
-use the built-in crlf IO discipline.
-
-=item *
-
-For the load_package method that uses a eval "require $package" to load the
-package, the $@ does not capture all the warnings and error messages,
-at least not with ActiveState Perl.  Added code the captures also the
-warnings, by temporaily reassigning  $SIG(__WARN__), and added these
-to the $@ error messages.
-
-=item *
-
-Added two new tests to verify the NOGO paths for the for the load_package
-method.  One tests for load module failure looking for all the possilbe
-information on why the module did not load. The other verifies that
-the vocabulary is present after the loading the module.
-This information is very helpful when you must remote debug a load
-failure from CPAN testing whose is running on a different platform.
+Added the method I<hex_dump>.
 
 =back
 
@@ -337,8 +301,8 @@ Follow the instructions for the the chosen installation software.
 
 The distribution file is at the following respositories:
 
-   http://www.softwarediamonds/packages/File-FileUtil-0.01
-   http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/File-FileUtil-0.01
+   http://www.softwarediamonds/packages/File-FileUtil-0.02
+   http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/File-FileUtil-0.02
 
 
 =head2 3.6.1 Installation support.
@@ -403,7 +367,7 @@ Write a program to build a matrix to trace
 test step to the requirements and vice versa by
 parsing the I<# R: > comments.
 Automatically insert the matrix in the
-Test::TestUtil POD.
+Test::STDutil POD.
 
 =back
 
@@ -453,26 +417,58 @@ United States
 
 =head1 2.0 SEE ALSO
 
-Modules relating to US DOD 2167A automation are
+Modules with end-user functional interfaces 
+relating to US DOD 2167A automation are
 as follows:
 
 =over 4
 
-=item L<ExtUtils::SVDmaker|ExtUtils::SVDmaker>
-
 =item L<Test::STDmaker|Test::STDmaker>
 
-=item L<DataCop::FileType::FormDB|DataCop::FileType::FormDB>
+=item L<ExtUtils::SVDmaker|ExtUtils::SVDmaker>
 
-=item L<DataCop::DataFileI|DataCop::DataFileI>
+=item L<DataPort::FileType::FormDB|DataPort::FileType::FormDB>
+
+=item L<DataPort::DataFile|DataPort::DataFile>
 
 =item L<Test::Tech|Test::Tech>
 
-=item L<Test::STD::TestUtil|Test::STD::TestUtil>
+=item L<Test|Test>
+
+=item L<Data::Dumper|Data::Dumper>
+
+=item L<Test::STD::Scrub|Test::STD::Scrub>
+
+=item L<Test::STD::STDutil|Test::STD::STDutil>
 
 =item L<File::FileUtil|File::FileUtil>
 
 =back
+
+The design modules for L<Test::STDmaker|Test::STDmaker>
+have no other conceivable use then to support the
+L<Test::STDmaker|Test::STDmaker> functional interface. 
+The  L<Test::STDmaker|Test::STDmaker>
+design module are as follows:
+
+=over 4
+
+=item L<Test::STD::Check|Test::STD::Check>
+
+=item L<Test::STD::FileGen|Test::STD::FileGen>
+
+=item L<Test::STD::STD2167|Test::STD::STD2167>
+
+=item L<Test::STD::STDgen|Test::STD::STDgen>
+
+=item L<Test::STDtype::Demo|Test::STDtype::Demo>
+
+=item L<Test::STDtype::STD|Test::STDtype::STD>
+
+=item L<Test::STDtype::Verify|Test::STDtype::Verify>
+
+=back
+
 
 Some US DOD 2167A Software Development Standard, DIDs and
 other related documents that complement the 
@@ -563,13 +559,13 @@ US DOD 2167A automation are as follows:
 __DATA__
 
 DISTNAME: File-FileUtil^
-VERSION : 0.01^
+VERSION : 0.02^
 REPOSITORY_DIR: packages^
 FREEZE: 1^
 
-PREVIOUS_DISTNAME: Test-TestUtil^
-PREVIOUS_RELEASE: 0.04^
-REVISION: -^
+PREVIOUS_DISTNAME:  ^
+PREVIOUS_RELEASE: 0.01^
+REVISION: A^
 AUTHOR  : SoftwareDiamonds.com E<lt>support@SoftwareDiamonds.comE<gt>^
 ABSTRACT: Generic file utilities originally developed to support Test::STDmaker^
 TITLE   :  File::FileUtil - Generic file utilites developed originally for Test::STDmaker and ExtUtils::SVDmaker^
@@ -589,11 +585,7 @@ COMPRESS: gzip^
 COMPRESS_SUFFIX: gz^
 
 RESTRUCTURE:  ^
-CHANGE2CURRENT:  
-  return if $file =~ s=lib/Test/TestUtil.pm=lib/File/FileUtil.pm=;
-  return if $file =~ s=t/Test/TestUtil/TestUtil=t/File/FileUtil/FileUtil=;
-  return if $file =~ s=t/Test/TestUtil=t/File/FileUtil=;
-^
+CHANGE2CURRENT:  ^
 
 AUTO_REVISE: 
 lib/File/FileUtil.pm
@@ -602,65 +594,16 @@ t/File/FileUtil/Drivers/*
 ^
 
 PREREQ_PM:  ^
-
 TESTS: t/File/FileUtil/FileUtil.t^
-
 EXE_FILES:  ^
-
-CHANGES:
-
-The changes from the previous version are as follows:
+CHANGES: 
+The changes to the previous revision are as follows:
 
 \=over 4
 
 \=item *
 
-At 02:44 AM 6/14/2003 +0200, Max Maischein wrote:
-A second thing that I would like you to reconsider is the naming of
-"Test::TestUtil" respectively "Test::Tech" - neither of those is descriptive
-of what the routines actually do or what the module implements. I would
-recommend renaming them to something closer to your other modules, maybe
-"Test::SVDMaker::Util" and "Test::SVDMaker::Tech", as some routines do not
-seem to be specific to the Test::-suite but rather general
-(format_array_table). Some parts (the "scrub" routines) might even better
-live in another module namespace, "Test::Util::ScrubData" or something like
-that.
-
-Broke away all the file related methods from Test::TestUtil and
-created this module File::FileUtil so the module name is
-more descriptive of the methods within the module.
-
-\=item *
-
-Broke the smart nl code out of the fin method and made it
-is own separate method, smart_nl method. 
-
-At 02:44 AM 6/14/2003 +0200, Max Maischein wrote:
-Perl, as Perl already does smart newline handling, (even though with the
-advent of 5.8 even Unix-people have to learn the word "binmode" now :-)) 
-
-The only place where I see Perl does smart newline handling is
-the crlf IO displine introduce in Perl 5.6.  The File::FileUtil has
-a use 5.001 so that 5.6 Perl built-ins cannot be used. Added comment
-to smart_nl that for users with 5.6 Perl that it may be better to
-use the built-in crlf IO discipline.
-
-\=item *
-
-For the load_package method that uses a eval "require $package" to load the
-package, the $@ does not capture all the warnings and error messages,
-at least not with ActiveState Perl.  Added code the captures also the
-warnings, by temporaily reassigning  $SIG(__WARN__), and added these
-to the $@ error messages.
-
-\=item *
-
-Added two new tests to verify the NOGO paths for the for the load_package
-method.  One tests for load module failure looking for all the possilbe
-information on why the module did not load. The other verifies that
-the vocabulary is present after the loading the module.
-This information is very helpful when you must remote debug a load
-failure from CPAN testing whose is running on a different platform.
+Added the method I<hex_dump>.
 
 \=back
 
@@ -686,13 +629,12 @@ Thus, in order to provide possible reuse in other modules,
 the L<File::FileUtils|File::FileUtils> module is broken
 out also as a functional module.
 
-The dependency of the functional program modules 
-L<Test::STDmaker|Test::STDmaker> and
-L<ExtUtils::SVDmaker|ExtUtils::SVDmaker>
-in the US DOD STD2167A bundle is as follows:
-
-     Test::Tech File::FileUtil Test::STD::TestUtil
-        DataPort::DataFile DataPort::FileType::FormDB
+The dependency of the program modules in the US DOD STD2167A bundle is as follows:
+ 
+ File::FileUtil 
+   Test::STD::Scrub
+     Test::Tech
+        DataPort::FileType::FormDB DataPort::DataFile Test::STD::STDutil
             Test::STDmaker ExtUtils::SVDmaker
 
 Test software should be short and not depend on any other
@@ -727,6 +669,14 @@ Loading program modules using an I<eval> and testing
 that the program module vocabulary is present.
 
 \=back
+
+Note the 
+L<File::FileUtil|File::FileUtil>, 
+L<Test::STD::STDutil|Test::STD::STDutil> 
+L<Test::STD::Scrub|Test::STD::Scrub> 
+program modules breaks up 
+the Test::TestUtil program module
+and Test::TestUtil has disappeared.
 ^
 
 PROBLEMS:
@@ -776,7 +726,7 @@ Write a program to build a matrix to trace
 test step to the requirements and vice versa by
 parsing the I<# R: > comments.
 Automatically insert the matrix in the
-Test::TestUtil POD.
+Test::STDutil POD.
 
 \=back
 
@@ -887,26 +837,58 @@ United States
 
 SEE_ALSO:
 
-Modules relating to US DOD 2167A automation are
+Modules with end-user functional interfaces 
+relating to US DOD 2167A automation are
 as follows:
 
 \=over 4
 
-\=item L<ExtUtils::SVDmaker|ExtUtils::SVDmaker>
-
 \=item L<Test::STDmaker|Test::STDmaker>
 
-\=item L<DataCop::FileType::FormDB|DataCop::FileType::FormDB>
+\=item L<ExtUtils::SVDmaker|ExtUtils::SVDmaker>
 
-\=item L<DataCop::DataFileI|DataCop::DataFileI>
+\=item L<DataPort::FileType::FormDB|DataPort::FileType::FormDB>
+
+\=item L<DataPort::DataFile|DataPort::DataFile>
 
 \=item L<Test::Tech|Test::Tech>
 
-\=item L<Test::STD::TestUtil|Test::STD::TestUtil>
+\=item L<Test|Test>
+
+\=item L<Data::Dumper|Data::Dumper>
+
+\=item L<Test::STD::Scrub|Test::STD::Scrub>
+
+\=item L<Test::STD::STDutil|Test::STD::STDutil>
 
 \=item L<File::FileUtil|File::FileUtil>
 
 \=back
+
+The design modules for L<Test::STDmaker|Test::STDmaker>
+have no other conceivable use then to support the
+L<Test::STDmaker|Test::STDmaker> functional interface. 
+The  L<Test::STDmaker|Test::STDmaker>
+design module are as follows:
+
+\=over 4
+
+\=item L<Test::STD::Check|Test::STD::Check>
+
+\=item L<Test::STD::FileGen|Test::STD::FileGen>
+
+\=item L<Test::STD::STD2167|Test::STD::STD2167>
+
+\=item L<Test::STD::STDgen|Test::STD::STDgen>
+
+\=item L<Test::STDtype::Demo|Test::STDtype::Demo>
+
+\=item L<Test::STDtype::STD|Test::STDtype::STD>
+
+\=item L<Test::STDtype::Verify|Test::STDtype::Verify>
+
+\=back
+
 
 Some US DOD 2167A Software Development Standard, DIDs and
 other related documents that complement the 

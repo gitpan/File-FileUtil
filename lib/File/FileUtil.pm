@@ -16,8 +16,8 @@ use warnings;
 use warnings::register;
 
 use vars qw($VERSION $DATE);
-$VERSION = '1.07';
-$DATE = '2003/06/18';
+$VERSION = '1.08';
+$DATE = '2003/06/19';
 
 use SelfLoader;
 use File::Spec;
@@ -93,6 +93,7 @@ sub fspec2fspec
 }
 
 __DATA__
+
 
 ######
 #
@@ -627,6 +628,27 @@ sub version
 }
 
 
+#####
+#
+#
+sub hex_dump
+{
+    my (undef, $text) = @_;
+    $text = unpack('H*', $text);
+    my $result = ''; 
+    while( $text ) { 
+        if( 40 < length( $text) ) {
+            $result .= substr( $text, 0, 40 ) . "\n";
+            $text = substr( $text,40);
+        }
+        else {
+            $result .= substr( $text, 0) . "\n";
+            $text = '';
+        }
+    }
+    $result
+}
+
 
 1
 
@@ -669,6 +691,10 @@ File::FileUtil - various low-level subroutines that involve files
   $module        = File::FileUtil->is_module($module, @modules)
 
   @globed_files  = File::FileUtil->fspec_glob($fspec, @files)
+
+  $result        = File::FileUtil->hex_dump( $string );
+
+
 
 =head1 DESCRIPTION
 
@@ -716,6 +742,27 @@ Supported operating system file specifications are as follows:
 Of course since, the variable I<$^O> contains the file specification
 for the current site operating system, it may be used for the
 I<$fspec> variable.
+
+=head2 2167A Bundle
+
+The File::FileUtil module was orginally developed to support the
+US DOD 2167A Bundle. The original functional interface modules
+in the US DOD 2167A bundle
+are shown in the below dependency tree
+
+ File::FileUtil 
+   Test::STD::Scrub
+     Test::Tech
+        DataPort::FileType::FormDB DataPort::DataFile Test::STD::STDutil
+            Test::STDmaker ExtUtils::SVDmaker
+
+Note the 
+L<File::FileUtil|File::FileUtil>, 
+L<Test::STD::STDutil|Test::STD::STDutil> 
+L<Test::STD::Scrub|Test::STD::Scrub> 
+program modules breaks up 
+the Test::TestUtil program module
+and Test::TestUtil has disappeared.
 
 =head2 fin fout method
 
@@ -855,6 +902,46 @@ For example,
  ==> File::FileUtil->fspec2pm('Unix', 'Test/TestUtil.pm')
 
  File::FileUtil
+
+=head2 hex_dump method
+
+Sometimes the eyes need to see the actual bytes of a file
+content. 
+The hex_dump method provides these eyes.
+For example,
+
+ ==> $text
+ 1..8 todo 2 5;
+ # OS            : MSWin32
+ # Perl          : 5.6.1
+ # Local Time    : Thu Jun 19 23:49:54 2003
+ # GMT Time      : Fri Jun 20 03:49:54 2003 GMT
+ # Number Storage: string
+ # Test::Tech    : 1.06
+ # Test          : 1.15
+ # Data::Dumper  : 2.102
+ # =cut 
+ # Pass test
+ ok 1
+ EOF
+
+ ==> File::FileUtil->hex_dump( $text )
+
+ 312e2e3820746f646f203220353b0a23204f5320
+ 20202020202020202020203a204d5357696e3332
+ 0a23205065726c202020202020202020203a2035
+ 2e362e310a23204c6f63616c2054696d65202020
+ 203a20546875204a756e2031392032333a34393a
+ 353420323030330a2320474d542054696d652020
+ 202020203a20467269204a756e2032302030333a
+ 34393a3534203230303320474d540a23204e756d
+ 6265722053746f726167653a20737472696e670a
+ 2320546573743a3a54656368202020203a20312e
+ 30360a232054657374202020202020202020203a
+ 20312e31350a2320446174613a3a44756d706572
+ 20203a20322e3130320a23203d637574200a2320
+ 5061737320746573740a6f6b20310a
+
 
 =head2 is_module method
 
@@ -1085,6 +1172,16 @@ page 754, Chapter 29: Functions, open function.
 For Perl 5.6 or above, the :crlf IO discipline my be preferable over the
 smart_nl method of this package.
 
+An example of the smart_nl method follows:
+
+ ==> $text
+
+ "line1\015\012line2\012\015line3\012line4\015"
+
+ ==> File::FileUtil->smart_nl( $text )
+
+ "line1\nline2\nline3\nline4\n"
+ 
 =head2 sub_modules method
 
   @sub_modules = File::FileUtil->sub_modules($base_file, @dirs)
@@ -1174,6 +1271,126 @@ OR TORT (INCLUDING USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF NEGLIGENCE OR OTHERWISE) ARISING IN
 ANY WAY OUT OF THE POSSIBILITY OF SUCH DAMAGE. 
 
+=head2 SEE_ALSO:
+
+Modules with end-user functional interfaces 
+relating to US DOD 2167A automation are
+as follows:
+
+=over 4
+
+=item L<Test::STDmaker|Test::STDmaker>
+
+=item L<ExtUtils::SVDmaker|ExtUtils::SVDmaker>
+
+=item L<DataPort::FileType::FormDB|DataPort::FileType::FormDB>
+
+=item L<DataPort::DataFile|DataPort::DataFile>
+
+=item L<Test::Tech|Test::Tech>
+
+=item L<Test|Test>
+
+=item L<Data::Dumper|Data::Dumper>
+
+=item L<Test::STD::Scrub|Test::STD::Scrub>
+
+=item L<Test::STD::STDutil|Test::STD::STDutil>
+
+=item L<File::FileUtil|File::FileUtil>
+
+=back
+
+The design modules for L<Test::STDmaker|Test::STDmaker>
+have no other conceivable use then to support the
+L<Test::STDmaker|Test::STDmaker> functional interface. 
+The  L<Test::STDmaker|Test::STDmaker>
+design module are as follows:
+
+=over 4
+
+=item L<Test::STD::Check|Test::STD::Check>
+
+=item L<Test::STD::FileGen|Test::STD::FileGen>
+
+=item L<Test::STD::STD2167|Test::STD::STD2167>
+
+=item L<Test::STD::STDgen|Test::STD::STDgen>
+
+=item L<Test::STDtype::Demo|Test::STDtype::Demo>
+
+=item L<Test::STDtype::STD|Test::STDtype::STD>
+
+=item L<Test::STDtype::Verify|Test::STDtype::Verify>
+
+=back
+
+
+Some US DOD 2167A Software Development Standard, DIDs and
+other related documents that complement the 
+US DOD 2167A automation bundle are as follows:
+
+=over 4
+
+=item L<US DOD Software Development Standard|Docs::US_DOD::STD2167A>
+
+=item L<US DOD Specification Practices|Docs::US_DOD::STD490A>
+
+=item L<Computer Operation Manual (COM) DID|Docs::US_DOD::COM>
+
+=item L<Computer Programming Manual (CPM) DID)|Docs::US_DOD::CPM>
+
+=item L<Computer Resources Integrated Support Document (CRISD) DID|Docs::US_DOD::CRISD>
+
+=item L<Computer System Operator's Manual (CSOM) DID|Docs::US_DOD::CSOM>
+
+=item L<Database Design Description (DBDD) DID|Docs::US_DOD::DBDD>
+
+=item L<Engineering Change Proposal (ECP) DID|Docs::US_DOD::ECP>
+
+=item L<Firmware support Manual (FSM) DID|Docs::US_DOD::FSM>
+
+=item L<Interface Design Document (IDD) DID|Docs::US_DOD::IDD>
+
+=item L<Interface Requirements Specification (IRS) DID|Docs::US_DOD::IRS>
+
+=item L<Operation Concept Description (OCD) DID|Docs::US_DOD::OCD>
+
+=item L<Specification Change Notice (SCN) DID|Docs::US_DOD::SCN>
+
+=item L<Software Design Specification (SDD) DID|Docs::US_DOD::SDD>
+
+=item L<Software Development Plan (SDP) DID|Docs::US_DOD::SDP> 
+
+=item L<Software Input and Output Manual (SIOM) DID|Docs::US_DOD::SIOM>
+
+=item L<Software Installation Plan (SIP) DID|Docs::US_DOD::SIP>
+
+=item L<Software Programmer's Manual (SPM) DID|Docs::US_DOD::SPM>
+
+=item L<Software Product Specification (SPS) DID|Docs::US_DOD::SPS>
+
+=item L<Software Requirements Specification (SRS) DID|Docs::US_DOD::SRS>
+
+=item L<System or Segment Design Document (SSDD) DID|Docs::US_DOD::SSDD>
+
+=item L<System or Subsystem Specification (SSS) DID|Docs::US_DOD::SSS>
+
+=item L<Software Test Description (STD) DID|Docs::US_DOD::STD>
+
+=item L<Software Test Plan (STP) DID|Docs::US_DOD::STP>
+
+=item L<Software Test Report (STR) DID|Docs::US_DOD::STR>
+
+=item L<Software Transition Plan (STrP) DID|Docs::US_DOD::STrP>
+
+=item L<Software User Manual (SUM) DID|Docs::US_DOD::SUM>
+
+=item L<Software Version Description (SVD) DID|Docs::US_DOD::SVD>
+
+=item L<Version Description Document (VDD) DID|Docs::US_DOD::VDD>
+
+=back
 =for html
 <p><br>
 <!-- BLK ID="NOTICE" -->
